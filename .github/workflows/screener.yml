@@ -1,0 +1,40 @@
+name: EOD Screener
+
+on:
+  # Läuft jeden Werktag um 19:30 Uhr (17:30 UTC = 18:30 CET / 19:30 CEST)
+  schedule:
+    - cron: '30 17 * * 1-5'
+
+  # Manuell auslösbar (über GitHub UI – Button "Run workflow")
+  workflow_dispatch:
+
+jobs:
+  run-screener:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write   # Erlaubt Pushen des generierten HTML
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Abhängigkeiten installieren
+        run: pip install -r requirements.txt
+
+      - name: Screener ausführen
+        run: python screener.py
+
+      - name: Dashboard auf GitHub Pages veröffentlichen
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          publish_branch: gh-pages
+          commit_message: "📊 EOD Update ${{ github.run_id }}"
