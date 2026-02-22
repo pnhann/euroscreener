@@ -8,6 +8,10 @@ import yfinance as yf
 import pandas as pd
 from datetime import datetime, timedelta
 import os
+import time
+import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 # ─────────────────────────────────────────────
 # Aktienliste – STOXX 600 Kernwerte
@@ -68,20 +72,62 @@ EUROPEAN_TICKERS = [
 # ─────────────────────────────────────────────
 # Daten laden
 # ─────────────────────────────────────────────
+def get_yf_session():
+    """Session mit Browser-Header – umgeht Yahoo Finance Rate Limiting."""
+    session = requests.Session()
+    session.headers.update({
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/120.0.0.0 Safari/537.36"
+        ),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5",
+    })
+    retry = Retry(total=3, backoff_factor=1,
+                  status_forcelist=[429, 500, 502, 503, 504])
+    session.mount("https://", HTTPAdapter(max_retries=retry))
+    return session
+
+
 def fetch_data(tickers):
     print(f"Lade Daten für {len(tickers)} Aktien...")
-    end = datetime.today()
+    end   = datetime.today()
     start = end - timedelta(days=35)
 
-    raw = yf.download(
-        tickers=tickers,
-        start=start.strftime("%Y-%m-%d"),
-        end=end.strftime("%Y-%m-%d"),
-        auto_adjust=True,
-        progress=False,
-        threads=True,
+    session = get_yf_session()
+
+    # Ticker in kleinere Batches aufteilen um Rate Limiting zu vermeiden
+    batch_size = 20
+    all_results = []
+
+    for i in range(0, len(tickers), batch_size):
+        batch = tickers[i:i + batch_size]
+        print(f"  Batch {i//batch_size + 1}: {len(batch)} Ticker...")
+        try:
+            raw_batch = yf.download(
+                tickers=batch,
+                start=start.strftime("%Y-%m-%d"),
+                end=end.strftime("%Y-%m-%d"),
+                auto_adjust=True,
+                progress=False,
+                threads=False,
+                session=session,
+            )
+            all_results.append((batch, raw_batch))
+        except Exception as e:
+            print(f"  Batch Fehler: {e}")
+        time.sleep(2)  # Pause zwischen Batches
+
+    # Ergebnisse zusammenführen
+    if not all_results:
+        raise ValueError("Keine Daten erhalten.")
+
+    combined = pd.concat(
+        [r for _, r in all_results],
+        axis=1
     )
-    return raw
+    return combined
 
 
 def build_screener(raw, tickers):
