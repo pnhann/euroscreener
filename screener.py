@@ -1,7 +1,7 @@
 """
 European Stock EOD Screener
-Läuft automatisch via GitHub Actions jeden Abend.
-Output: docs/index.html (wird via GitHub Pages bereitgestellt)
+Datenquelle: stooq.com (kein API-Key, funktioniert von GitHub Actions)
+Output: docs/index.html (via GitHub Pages)
 """
 
 import pandas as pd
@@ -9,142 +9,150 @@ from datetime import datetime, timedelta
 import os
 import time
 import requests
+import io
 
 # ─────────────────────────────────────────────
-# Aktienliste – STOXX 600 Kernwerte
+# Ticker-Mapping: Yahoo-Suffix → stooq-Suffix
+# stooq verwendet Länder-Domains statt Börsen-Suffixe
+# ─────────────────────────────────────────────
+SUFFIX_MAP = {
+    ".DE": ".de",   # XETRA → Deutschland
+    ".PA": ".fr",   # Paris → Frankreich
+    ".SW": ".sw",   # SIX Zürich
+    ".L":  ".uk",   # London
+    ".AS": ".nl",   # Amsterdam → Niederlande
+    ".MC": ".es",   # Madrid → Spanien
+    ".MI": ".it",   # Mailand → Italien
+    ".ST": ".se",   # Stockholm → Schweden
+    ".CO": ".dk",   # Kopenhagen → Dänemark
+    ".OL": ".no",   # Oslo → Norwegen
+    ".HE": ".fi",   # Helsinki → Finnland
+    ".BR": ".be",   # Brüssel → Belgien
+    ".VI": ".at",   # Wien → Österreich
+}
+
+EXCHANGE_MAP = {
+    ".DE": "XETRA",     ".PA": "Paris",    ".SW": "Zürich",
+    ".L":  "London",    ".AS": "Amsterdam",".MC": "Madrid",
+    ".MI": "Mailand",   ".ST": "Stockholm",".CO": "Kopenhagen",
+    ".OL": "Oslo",      ".HE": "Helsinki", ".BR": "Brüssel",
+    ".VI": "Wien",
+}
+
+CURRENCY_MAP = {
+    "London": "GBp", "Zürich": "CHF", "Stockholm": "SEK",
+    "Oslo": "NOK", "Kopenhagen": "DKK",
+}
+
+# ─────────────────────────────────────────────
+# Aktienliste
 # ─────────────────────────────────────────────
 EUROPEAN_TICKERS = [
-    # Deutschland (XETRA)
-    "SAP.DE", "SIE.DE", "ALV.DE", "MRK.DE", "DTE.DE", "BAYN.DE", "BMW.DE",
-    "MBG.DE", "VOW3.DE", "BAS.DE", "RWE.DE", "EON.DE", "DBK.DE", "CBK.DE",
-    "ADS.DE", "IFX.DE", "FRE.DE", "HEN3.DE", "MUV2.DE",
-    "DHER.DE", "ZAL.DE", "VNA.DE", "MTX.DE",
-
-    # Frankreich (Euronext Paris)
-    "MC.PA", "OR.PA", "TTE.PA", "SAN.PA", "AIR.PA", "BNP.PA", "AXA.PA",
-    "SU.PA", "RI.PA", "CS.PA", "SGO.PA", "VIE.PA", "KER.PA",
-    "CAP.PA", "EL.PA", "ML.PA", "STM.PA", "VIV.PA", "ENGI.PA",
-    "LR.PA", "RNO.PA", "ORA.PA",
-
-    # Schweiz (SIX)
-    "NESN.SW", "NOVN.SW", "ZURN.SW", "SIKA.SW", "LONN.SW", "GIVN.SW",
-    "CFR.SW", "HOLN.SW", "PGHN.SW",
-
-    # UK (London)
-    "HSBA.L", "SHEL.L", "AZN.L", "ULVR.L", "BP.L", "GSK.L", "RIO.L",
-    "LSEG.L", "VOD.L", "BT-A.L", "REL.L", "NG.L", "STAN.L", "BARC.L",
-    "LLOY.L", "NWG.L", "AV.L", "PRU.L", "TSCO.L",
-
+    # Deutschland
+    "SAP.DE","SIE.DE","ALV.DE","MRK.DE","DTE.DE","BAYN.DE","BMW.DE",
+    "MBG.DE","VOW3.DE","BAS.DE","RWE.DE","EON.DE","DBK.DE","CBK.DE",
+    "ADS.DE","IFX.DE","HEN3.DE","MUV2.DE","MTX.DE",
+    # Frankreich
+    "MC.PA","OR.PA","TTE.PA","SAN.PA","AIR.PA","BNP.PA","AXA.PA",
+    "SU.PA","RI.PA","SGO.PA","KER.PA","STM.PA","VIV.PA","ENGI.PA",
+    "LR.PA","RNO.PA","ORA.PA",
+    # Schweiz
+    "NESN.SW","NOVN.SW","ZURN.SW","SIKA.SW","LONN.SW","CFR.SW","HOLN.SW",
+    # UK
+    "HSBA.L","SHEL.L","AZN.L","ULVR.L","BP.L","GSK.L","RIO.L",
+    "VOD.L","REL.L","NG.L","BARC.L","LLOY.L","NWG.L","PRU.L",
     # Niederlande
-    "ASML.AS", "HEIA.AS", "PHIA.AS", "NN.AS", "ABN.AS", "ING.AS",
-    "AD.AS", "WKL.AS",
-
+    "ASML.AS","HEIA.AS","PHIA.AS","ING.AS","AD.AS",
     # Spanien
-    "ITX.MC", "BBVA.MC", "SAN.MC", "IBE.MC", "REP.MC", "TEF.MC",
-    "CABK.MC", "MAP.MC",
-
+    "ITX.MC","BBVA.MC","SAN.MC","IBE.MC","REP.MC","TEF.MC",
     # Italien
-    "ENI.MI", "ENEL.MI", "UCG.MI", "LDO.MI", "PRY.MI", "RACE.MI", "G.MI",
-
+    "ENI.MI","ENEL.MI","UCG.MI","RACE.MI",
     # Schweden
-    "VOLV-B.ST", "ERIC-B.ST", "HM-B.ST", "ASSA-B.ST", "SAND.ST",
-
+    "VOLV-B.ST","ERIC-B.ST","HM-B.ST","SAND.ST",
     # Dänemark
-    "NOVO-B.CO", "ORSTED.CO", "DSV.CO",
-
+    "NOVO-B.CO","DSV.CO",
     # Norwegen
-    "EQNR.OL", "DNB.OL", "TEL.OL",
-
+    "EQNR.OL","DNB.OL",
     # Finnland
     "NOKIA.HE",
-
     # Belgien
-    "UCB.BR", "ABI.BR", "SOLB.BR", "ACKB.BR",
-
+    "UCB.BR","ABI.BR",
     # Österreich
-    "OMV.VI", "VIG.VI", "ERSTE.VI",
+    "OMV.VI","ERSTE.VI",
 ]
 
-
-# ─────────────────────────────────────────────
-# Daten laden – direkte Yahoo Finance Chart API
-# (kein yfinance, kein Crumb nötig)
-# ─────────────────────────────────────────────
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
         "AppleWebKit/537.36 (KHTML, like Gecko) "
         "Chrome/120.0.0.0 Safari/537.36"
     ),
-    "Accept": "application/json",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Referer": "https://finance.yahoo.com/",
-    "Origin": "https://finance.yahoo.com",
 }
 
-def fetch_ticker(session, ticker, period1, period2):
-    """Lädt OHLCV-Daten für einen Ticker direkt über die Chart-API."""
-    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}"
+# ─────────────────────────────────────────────
+# Daten laden via stooq.com
+# ─────────────────────────────────────────────
+def yahoo_to_stooq(ticker):
+    """Konvertiert Yahoo-Ticker-Format zu stooq-Format."""
+    for yf_suffix, stooq_suffix in SUFFIX_MAP.items():
+        if ticker.endswith(yf_suffix):
+            base = ticker[:-len(yf_suffix)].lower().replace("-", "_")
+            return base + stooq_suffix
+    return ticker.lower()
+
+
+def fetch_ticker(session, ticker, d1, d2):
+    """Lädt Tagesdaten von stooq.com als CSV."""
+    stooq_ticker = yahoo_to_stooq(ticker)
+    url = "https://stooq.com/q/d/l/"
     params = {
-        "period1": int(period1),
-        "period2": int(period2),
-        "interval": "1d",
-        "events":   "history",
-        "includePrePost": "false",
+        "s":  stooq_ticker,
+        "d1": d1,
+        "d2": d2,
+        "i":  "d",
     }
-    for attempt in range(2):
-        try:
-            r = session.get(url, params=params, timeout=8, headers=HEADERS)
-            if r.status_code == 429:
-                time.sleep(3)
-                continue
-            if r.status_code != 200:
-                return None
-            data = r.json()
-            result = data.get("chart", {}).get("result", [])
-            if not result:
-                return None
-            res = result[0]
-            timestamps = res.get("timestamp", [])
-            ohlcv = res.get("indicators", {}).get("quote", [{}])[0]
-            adjclose = res.get("indicators", {}).get("adjclose", [{}])[0].get("adjclose", [])
-            if not timestamps or not adjclose:
-                return None
-            df = pd.DataFrame({
-                "open":   ohlcv.get("open",   []),
-                "high":   ohlcv.get("high",   []),
-                "low":    ohlcv.get("low",    []),
-                "close":  adjclose,
-                "volume": ohlcv.get("volume", []),
-            }, index=pd.to_datetime(timestamps, unit="s", utc=True).tz_convert("Europe/Berlin").normalize())
-            return df.dropna(subset=["close"])
-        except Exception as e:
-            time.sleep(2)
-    return None
+    try:
+        r = session.get(url, params=params, timeout=10, headers=HEADERS)
+        if r.status_code != 200 or len(r.content) < 50:
+            return None
+        df = pd.read_csv(io.StringIO(r.text))
+        if df.empty or "Close" not in df.columns:
+            return None
+        df["Date"] = pd.to_datetime(df["Date"])
+        df = df.sort_values("Date").reset_index(drop=True)
+        return df
+    except Exception:
+        return None
 
 
 def fetch_data(tickers):
-    print(f"Lade Daten für {len(tickers)} Aktien...")
-    end    = datetime.today()
-    start  = end - timedelta(days=40)
-    p1     = int(start.timestamp())
-    p2     = int(end.timestamp())
+    end   = datetime.today()
+    start = end - timedelta(days=40)
+    d1    = start.strftime("%Y%m%d")
+    d2    = end.strftime("%Y%m%d")
 
+    print(f"Lade {len(tickers)} Aktien von stooq.com...")
     session = requests.Session()
     results = {}
+    skipped = 0
+
     for i, ticker in enumerate(tickers):
-        df = fetch_ticker(session, ticker, p1, p2)
+        df = fetch_ticker(session, ticker, d1, d2)
         if df is not None and len(df) >= 2:
             results[ticker] = df
         else:
-            print(f"  Übersprungen: {ticker}")
-        # Kurze Pause alle 20 Ticker
-        if (i + 1) % 20 == 0:
+            skipped += 1
+        # Kurze Pause alle 15 Ticker
+        if (i + 1) % 15 == 0:
             time.sleep(1)
-    print(f"  {len(results)}/{len(tickers)} Ticker geladen")
+
+    print(f"  ✅ {len(results)} geladen, {skipped} übersprungen")
     return results
 
 
+# ─────────────────────────────────────────────
+# Screener aufbauen
+# ─────────────────────────────────────────────
 def build_screener(ticker_data, tickers):
     records = []
 
@@ -154,41 +162,29 @@ def build_screener(ticker_data, tickers):
             if df is None or len(df) < 2:
                 continue
 
-            close  = df["close"]
-            volume = df["volume"]
-            high   = df["high"]
+            close  = df["Close"]
+            volume = df["Volume"] if "Volume" in df.columns else pd.Series([0]*len(df))
+            high   = df["High"]   if "High"   in df.columns else close
 
             today_close  = float(close.iloc[-1])
             prev_close   = float(close.iloc[-2])
-            today_volume = float(volume.iloc[-1]) if len(volume) > 0 else 0
+            today_volume = float(volume.iloc[-1])
             avg_vol_20   = float(volume.iloc[-21:-1].mean()) if len(volume) >= 21 else float(volume.mean())
+            pct_change   = (today_close - prev_close) / prev_close * 100
+            vol_ratio    = today_volume / avg_vol_20 if avg_vol_20 > 0 else 1.0
+            high_30d     = float(high.max())
 
-            pct_change = ((today_close - prev_close) / prev_close) * 100
-            vol_ratio  = today_volume / avg_vol_20 if avg_vol_20 > 0 else 1.0
-            high_30d   = float(high.max()) if len(high) > 0 else today_close
-
-            # Börse erkennen
-            suffix_map = {
-                ".DE": "XETRA", ".PA": "Paris", ".L": "London", ".SW": "Zürich",
-                ".AS": "Amsterdam", ".MC": "Madrid", ".MI": "Mailand",
-                ".ST": "Stockholm", ".CO": "Kopenhagen", ".OL": "Oslo",
-                ".HE": "Helsinki", ".BR": "Brüssel", ".VI": "Wien",
-            }
+            # Exchange & Currency
             exchange = "–"
-            for suffix, name in suffix_map.items():
+            for suffix, exch in EXCHANGE_MAP.items():
                 if ticker.endswith(suffix):
-                    exchange = name
+                    exchange = exch
                     break
+            currency = CURRENCY_MAP.get(exchange, "EUR")
 
-            currency = "GBp" if exchange == "London" else \
-                       "CHF" if exchange == "Zürich" else \
-                       "SEK" if exchange == "Stockholm" else \
-                       "NOK" if exchange == "Oslo" else \
-                       "DKK" if exchange == "Kopenhagen" else "EUR"
-
-            # Ticker-Suffix entfernen für Anzeigename
+            # Anzeigename (Suffix entfernen)
             name = ticker
-            for suffix in suffix_map:
+            for suffix in EXCHANGE_MAP:
                 name = name.replace(suffix, "")
 
             records.append({
@@ -203,15 +199,14 @@ def build_screener(ticker_data, tickers):
                 "vol_ratio":  round(vol_ratio, 2),
                 "high_30d":   round(high_30d, 2),
             })
-
         except Exception as e:
-            print(f"  Fehler bei {ticker}: {e}")
+            print(f"  Fehler {ticker}: {e}")
             continue
 
-    df = pd.DataFrame(records)
-    if df.empty:
+    df_out = pd.DataFrame(records)
+    if df_out.empty:
         raise ValueError("Keine Daten verarbeitbar.")
-    return df.sort_values("pct_change", ascending=False).reset_index(drop=True)
+    return df_out.sort_values("pct_change", ascending=False).reset_index(drop=True)
 
 
 # ─────────────────────────────────────────────
@@ -245,11 +240,9 @@ def generate_html(df, date_str, generated_at):
     gainers         = df[df["pct_change"] > 0].head(20)
     losers          = df[df["pct_change"] < 0].sort_values("pct_change").head(20)
     volume_outliers = df[df["vol_ratio"] > 2.0].sort_values("vol_ratio", ascending=False).head(20)
-
-    market_avg     = df["pct_change"].mean()
-    positive_count = len(df[df["pct_change"] > 0])
-    total_count    = len(df)
-
+    market_avg      = df["pct_change"].mean()
+    positive_count  = len(df[df["pct_change"] > 0])
+    total_count     = len(df)
     top_gainer_name = df.loc[df["pct_change"].idxmax(), "name"]
     top_loser_name  = df.loc[df["pct_change"].idxmin(), "name"]
 
@@ -271,7 +264,6 @@ def generate_html(df, date_str, generated_at):
   }}
   *{{margin:0;padding:0;box-sizing:border-box}}
   body{{background:var(--bg);color:var(--text);font-family:var(--font-m);font-size:13px;min-height:100vh}}
-
   .header{{background:linear-gradient(135deg,#0f1420,#0a0c0f);border-bottom:1px solid var(--border);padding:32px 40px 28px;position:relative;overflow:hidden}}
   .header::before{{content:'';position:absolute;top:-80px;right:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(59,130,246,.08),transparent 70%);pointer-events:none}}
   .header-top{{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px}}
@@ -280,31 +272,25 @@ def generate_html(df, date_str, generated_at):
   h1{{font-family:var(--font-d);font-size:22px;font-weight:800;letter-spacing:-.5px;color:#fff}}
   .subtitle{{font-size:11px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:2px}}
   .date-badge{{background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:8px 16px;font-size:12px;color:var(--text-dim);letter-spacing:1px}}
-
   .stats-bar{{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}}
   .stat-card{{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;position:relative;overflow:hidden}}
   .stat-card::after{{content:'';position:absolute;top:0;left:0;right:0;height:2px}}
-  .stat-card.up::after{{background:var(--green)}}
-  .stat-card.down::after{{background:var(--red)}}
-  .stat-card.neutral::after{{background:var(--blue)}}
-  .stat-card.volume::after{{background:var(--gold)}}
+  .stat-card.up::after{{background:var(--green)}} .stat-card.down::after{{background:var(--red)}}
+  .stat-card.neutral::after{{background:var(--blue)}} .stat-card.volume::after{{background:var(--gold)}}
   .stat-label{{font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}}
   .stat-value{{font-family:var(--font-d);font-size:28px;font-weight:800;line-height:1}}
   .stat-value.up{{color:var(--green)}} .stat-value.down{{color:var(--red)}}
   .stat-value.neutral{{color:var(--blue)}} .stat-value.volume{{color:var(--gold)}}
   .stat-sub{{font-size:10px;color:var(--text-muted);margin-top:4px}}
-
   .main{{padding:32px 40px}}
   .search-bar{{position:relative;margin-bottom:32px}}
   .search-bar input{{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:10px 16px 10px 40px;color:var(--text);font-family:var(--font-m);font-size:13px;outline:none;transition:border-color .2s}}
   .search-bar input:focus{{border-color:var(--blue)}}
   .search-icon{{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-dim)}}
-
   .tabs{{display:flex;border-bottom:1px solid var(--border);margin-bottom:24px}}
   .tab{{padding:10px 24px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:var(--font-d);font-weight:600;font-size:13px;color:var(--text-dim);transition:all .2s;letter-spacing:.3px}}
   .tab:hover{{color:var(--text)}} .tab.active{{color:var(--text);border-bottom-color:var(--blue)}}
   .tab-panel{{display:none}} .tab-panel.active{{display:block}}
-
   .table-wrap{{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}}
   .table-header{{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}}
   .table-title{{font-family:var(--font-d);font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}}
@@ -323,7 +309,6 @@ def generate_html(df, date_str, generated_at):
   .badge{{border-radius:4px;padding:1px 6px;font-size:10px;margin-left:6px}}
   .badge-hot{{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.2)}}
   .badge-watch{{background:rgba(245,158,11,.12);color:var(--gold);border:1px solid rgba(245,158,11,.2)}}
-
   .footer{{padding:20px 40px;border-top:1px solid var(--border);color:var(--text-muted);font-size:11px;display:flex;justify-content:space-between;align-items:center}}
   @media(max-width:768px){{
     .header,.main{{padding:20px}} .stats-bar{{grid-template-columns:repeat(2,1fr)}}
@@ -332,7 +317,6 @@ def generate_html(df, date_str, generated_at):
 </style>
 </head>
 <body>
-
 <div class="header">
   <div class="header-top">
     <div class="brand">
@@ -367,20 +351,17 @@ def generate_html(df, date_str, generated_at):
     </div>
   </div>
 </div>
-
 <div class="main">
   <div class="search-bar">
     <span class="search-icon">🔍</span>
     <input type="text" id="searchInput" placeholder="Aktie suchen… (Ticker oder Name)" oninput="filterTable()">
   </div>
-
   <div class="tabs">
     <div class="tab active"  onclick="showTab('gainers',event)">📈 Top Gainer</div>
     <div class="tab"         onclick="showTab('losers',event)">📉 Top Loser</div>
     <div class="tab"         onclick="showTab('volume',event)">🔥 Volumen-Anomalien</div>
     <div class="tab"         onclick="showTab('all',event)">📋 Alle Aktien</div>
   </div>
-
   <div id="tab-gainers" class="tab-panel active">
     <div class="table-wrap">
       <div class="table-header">
@@ -395,7 +376,6 @@ def generate_html(df, date_str, generated_at):
       </tr></thead><tbody>{rows_html(gainers)}</tbody></table>
     </div>
   </div>
-
   <div id="tab-losers" class="tab-panel">
     <div class="table-wrap">
       <div class="table-header">
@@ -410,7 +390,6 @@ def generate_html(df, date_str, generated_at):
       </tr></thead><tbody>{rows_html(losers)}</tbody></table>
     </div>
   </div>
-
   <div id="tab-volume" class="tab-panel">
     <div class="table-wrap">
       <div class="table-header">
@@ -425,7 +404,6 @@ def generate_html(df, date_str, generated_at):
       </tr></thead><tbody>{rows_html(volume_outliers)}</tbody></table>
     </div>
   </div>
-
   <div id="tab-all" class="tab-panel">
     <div class="table-wrap">
       <div class="table-header">
@@ -441,12 +419,10 @@ def generate_html(df, date_str, generated_at):
     </div>
   </div>
 </div>
-
 <div class="footer">
-  <div>Daten: Yahoo Finance · Kein Anlageberatungsersatz · Nur zur Information</div>
+  <div>Daten: stooq.com · Kein Anlageberatungsersatz · Nur zur Information</div>
   <div>Automatisch generiert am {generated_at}</div>
 </div>
-
 <script>
 function showTab(name,e){{
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
@@ -498,8 +474,6 @@ if __name__ == "__main__":
 
     os.makedirs("docs", exist_ok=True)
     html = generate_html(df, date_str, generated_at)
-
     with open("docs/index.html", "w", encoding="utf-8") as f:
         f.write(html)
-
-    print("💾 Dashboard gespeichert: docs/index.html")
+    print(f"💾 Dashboard gespeichert: docs/index.html")
