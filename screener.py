@@ -4,14 +4,11 @@ Läuft automatisch via GitHub Actions jeden Abend.
 Output: docs/index.html (wird via GitHub Pages bereitgestellt)
 """
 
-import yfinance as yf
 import pandas as pd
 from datetime import datetime, timedelta
 import os
 import time
 import requests
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
 
 # ─────────────────────────────────────────────
 # Aktienliste – STOXX 600 Kernwerte
@@ -70,82 +67,96 @@ EUROPEAN_TICKERS = [
 
 
 # ─────────────────────────────────────────────
-# Daten laden
+# Daten laden – direkte Yahoo Finance Chart API
+# (kein yfinance, kein Crumb nötig)
 # ─────────────────────────────────────────────
-def get_yf_session():
-    """Session mit Browser-Header – umgeht Yahoo Finance Rate Limiting."""
-    session = requests.Session()
-    session.headers.update({
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/120.0.0.0 Safari/537.36"
-        ),
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.5",
-    })
-    retry = Retry(total=3, backoff_factor=1,
-                  status_forcelist=[429, 500, 502, 503, 504])
-    session.mount("https://", HTTPAdapter(max_retries=retry))
-    return session
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/120.0.0.0 Safari/537.36"
+    ),
+    "Accept": "application/json",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Referer": "https://finance.yahoo.com/",
+    "Origin": "https://finance.yahoo.com",
+}
+
+def fetch_ticker(session, ticker, period1, period2):
+    """Lädt OHLCV-Daten für einen Ticker direkt über die Chart-API."""
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}"
+    params = {
+        "period1": int(period1),
+        "period2": int(period2),
+        "interval": "1d",
+        "events":   "history",
+        "includePrePost": "false",
+    }
+    for attempt in range(3):
+        try:
+            r = session.get(url, params=params, timeout=15, headers=HEADERS)
+            if r.status_code == 429:
+                time.sleep(5 * (attempt + 1))
+                continue
+            if r.status_code != 200:
+                return None
+            data = r.json()
+            result = data.get("chart", {}).get("result", [])
+            if not result:
+                return None
+            res = result[0]
+            timestamps = res.get("timestamp", [])
+            ohlcv = res.get("indicators", {}).get("quote", [{}])[0]
+            adjclose = res.get("indicators", {}).get("adjclose", [{}])[0].get("adjclose", [])
+            if not timestamps or not adjclose:
+                return None
+            df = pd.DataFrame({
+                "open":   ohlcv.get("open",   []),
+                "high":   ohlcv.get("high",   []),
+                "low":    ohlcv.get("low",    []),
+                "close":  adjclose,
+                "volume": ohlcv.get("volume", []),
+            }, index=pd.to_datetime(timestamps, unit="s", utc=True).tz_convert("Europe/Berlin").normalize())
+            return df.dropna(subset=["close"])
+        except Exception as e:
+            time.sleep(2)
+    return None
 
 
 def fetch_data(tickers):
     print(f"Lade Daten für {len(tickers)} Aktien...")
-    end   = datetime.today()
-    start = end - timedelta(days=35)
+    end    = datetime.today()
+    start  = end - timedelta(days=40)
+    p1     = int(start.timestamp())
+    p2     = int(end.timestamp())
 
-    session = get_yf_session()
-
-    # Ticker in kleinere Batches aufteilen um Rate Limiting zu vermeiden
-    batch_size = 20
-    all_results = []
-
-    for i in range(0, len(tickers), batch_size):
-        batch = tickers[i:i + batch_size]
-        print(f"  Batch {i//batch_size + 1}: {len(batch)} Ticker...")
-        try:
-            raw_batch = yf.download(
-                tickers=batch,
-                start=start.strftime("%Y-%m-%d"),
-                end=end.strftime("%Y-%m-%d"),
-                auto_adjust=True,
-                progress=False,
-                threads=False,
-                session=session,
-            )
-            all_results.append((batch, raw_batch))
-        except Exception as e:
-            print(f"  Batch Fehler: {e}")
-        time.sleep(2)  # Pause zwischen Batches
-
-    # Ergebnisse zusammenführen
-    if not all_results:
-        raise ValueError("Keine Daten erhalten.")
-
-    combined = pd.concat(
-        [r for _, r in all_results],
-        axis=1
-    )
-    return combined
+    session = requests.Session()
+    results = {}
+    for i, ticker in enumerate(tickers):
+        df = fetch_ticker(session, ticker, p1, p2)
+        if df is not None and len(df) >= 2:
+            results[ticker] = df
+        else:
+            print(f"  Übersprungen: {ticker}")
+        # Kurze Pause alle 10 Ticker
+        if (i + 1) % 10 == 0:
+            time.sleep(2)
+    print(f"  {len(results)}/{len(tickers)} Ticker geladen")
+    return results
 
 
-def build_screener(raw, tickers):
+def build_screener(ticker_data, tickers):
     records = []
 
     for ticker in tickers:
         try:
-            if isinstance(raw.columns, pd.MultiIndex):
-                close  = raw["Close"][ticker].dropna()
-                volume = raw["Volume"][ticker].dropna()
-                high   = raw["High"][ticker].dropna()
-            else:
-                close  = raw["Close"].dropna()
-                volume = raw["Volume"].dropna()
-                high   = raw["High"].dropna()
-
-            if len(close) < 2:
+            df = ticker_data.get(ticker)
+            if df is None or len(df) < 2:
                 continue
+
+            close  = df["close"]
+            volume = df["volume"]
+            high   = df["high"]
 
             today_close  = float(close.iloc[-1])
             prev_close   = float(close.iloc[-2])
@@ -478,8 +489,8 @@ if __name__ == "__main__":
     date_str     = datetime.today().strftime("%d.%m.%Y")
     generated_at = datetime.now().strftime("%d.%m.%Y um %H:%M Uhr (UTC)")
 
-    raw = fetch_data(EUROPEAN_TICKERS)
-    df  = build_screener(raw, EUROPEAN_TICKERS)
+    ticker_data = fetch_data(EUROPEAN_TICKERS)
+    df          = build_screener(ticker_data, EUROPEAN_TICKERS)
 
     print(f"✅ {len(df)} Aktien verarbeitet")
     print(f"📈 Top Gainer: {df.iloc[0]['ticker']} (+{df.iloc[0]['pct_change']:.2f}%)")
