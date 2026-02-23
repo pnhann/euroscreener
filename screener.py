@@ -164,8 +164,9 @@ def fetch_data():
             ok += 1
         else:
             print(f"  Fehler: {ticker} ({stooq_t})")
+        time.sleep(0.8)
         if (i + 1) % 20 == 0:
-            time.sleep(1)
+            time.sleep(5)
 
     print(f"  ✅ {ok}/{len(STOCKS)} Aktien geladen")
     return results
@@ -459,15 +460,15 @@ tbody tr {{
 tbody tr:hover {{ background: rgba(88,166,255,.04); }}
 tbody tr.hidden {{ display: none; }}
 td {{ padding: 10px 14px; vertical-align: middle; }}
-.chip-link {
+.chip-link {{
   text-decoration: none;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
-}
-.chip-link:hover {
+}}
+.chip-link:hover {{
   background: #388bfd33;
   color: #79c0ff;
-}
+}}
 .chip {{
   background: rgba(88,166,255,.1); border: 1px solid rgba(88,166,255,.2);
   color: var(--blue); border-radius: 5px; padding: 2px 7px;
