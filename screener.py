@@ -226,8 +226,9 @@ def rows_html(subset):
             vol_badge = '<span class="badge hot">🔥</span>'
         elif r["vol_ratio"] >= 2:
             vol_badge = '<span class="badge warm">↑</span>'
+        tv = tv_link(r['ticker'])
         html += f"""<tr data-country="{r['country']}" data-sector="{r['sector']}">
-  <td><span class="chip">{r['ticker']}</span></td>
+  <td><a href="{tv}" target="_blank" rel="noopener" class="chip chip-link">{r['ticker']}</a></td>
   <td class="td-name">{r['name']}</td>
   <td><span class="flag">{country_flag(r['country'])}</span> <span class="td-dim">{r['country']}</span></td>
   <td><span class="sector-tag s-{sector_slug(r['sector'])}">{r['sector']}</span></td>
@@ -236,6 +237,18 @@ def rows_html(subset):
   <td class="td-num">{r['vol_ratio']:.1f}x {vol_badge}</td>
 </tr>"""
     return html
+
+def tv_link(ticker):
+    exchange_map = {
+        ".DE": "XETRA", ".PA": "EURONEXT", ".SW": "SIX", ".L": "LSE",
+        ".AS": "EURONEXT", ".MC": "BME", ".MI": "MIL", ".ST": "OMX",
+        ".CO": "OMXCOP", ".OL": "OSL", ".HE": "OMXHEX", ".BR": "EURONEXT", ".VI": "WBAG",
+    }
+    for suffix, exchange in exchange_map.items():
+        if ticker.endswith(suffix):
+            symbol = ticker[:-len(suffix)]
+            return f"https://www.tradingview.com/chart/?symbol={exchange}%3A{symbol}"
+    return f"https://www.tradingview.com/search/?query={ticker}"
 
 def country_flag(c):
     flags = {"Deutschland":"🇩🇪","Frankreich":"🇫🇷","Schweiz":"🇨🇭","UK":"🇬🇧",
@@ -446,6 +459,15 @@ tbody tr {{
 tbody tr:hover {{ background: rgba(88,166,255,.04); }}
 tbody tr.hidden {{ display: none; }}
 td {{ padding: 10px 14px; vertical-align: middle; }}
+.chip-link {
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.chip-link:hover {
+  background: #388bfd33;
+  color: #79c0ff;
+}
 .chip {{
   background: rgba(88,166,255,.1); border: 1px solid rgba(88,166,255,.2);
   color: var(--blue); border-radius: 5px; padding: 2px 7px;
