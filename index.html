@@ -169,6 +169,15 @@ tbody tr {
 tbody tr:hover { background: rgba(88,166,255,.04); }
 tbody tr.hidden { display: none; }
 td { padding: 10px 14px; vertical-align: middle; }
+.chip-link {
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.chip-link:hover {
+  background: #388bfd33;
+  color: #79c0ff;
+}
 .chip {
   background: rgba(88,166,255,.1); border: 1px solid rgba(88,166,255,.2);
   color: var(--blue); border-radius: 5px; padding: 2px 7px;
@@ -245,12 +254,12 @@ td { padding: 10px 14px; vertical-align: middle; }
     </div>
     <div class="kpi b">
       <div class="kpi-label">Marktbreite</div>
-      <div class="kpi-val b">28/36</div>
+      <div class="kpi-val b">27/36</div>
       <div class="kpi-sub">Aktien im Plus</div>
     </div>
     <div class="kpi o">
       <div class="kpi-label">Ø Veränderung</div>
-      <div class="kpi-val o">+0.47%</div>
+      <div class="kpi-val o">+0.35%</div>
       <div class="kpi-sub">Marktdurchschnitt</div>
     </div>
   </div>
@@ -299,7 +308,7 @@ td { padding: 10px 14px; vertical-align: middle; }
           <th onclick="sortT('t-all',6)" style="text-align:right">Vol. Ratio</th>
         </tr></thead>
         <tbody><tr data-country="Deutschland" data-sector="Konsumgüter">
-  <td><span class="chip">ADS.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AADS" target="_blank" rel="noopener" class="chip chip-link">ADS.DE</a></td>
   <td class="td-name">Adidas AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-konsumgueter">Konsumgüter</span></td>
@@ -307,7 +316,7 @@ td { padding: 10px 14px; vertical-align: middle; }
   <td class="td-num pos td-bold">▲ 2.22%</td>
   <td class="td-num">1.0x </td>
 </tr><tr data-country="Deutschland" data-sector="Finanzen">
-  <td><span class="chip">DBK.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3ADBK" target="_blank" rel="noopener" class="chip chip-link">DBK.DE</a></td>
   <td class="td-name">Deutsche Bank AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-finanzen">Finanzen</span></td>
@@ -315,55 +324,79 @@ td { padding: 10px 14px; vertical-align: middle; }
   <td class="td-num pos td-bold">▲ 2.10%</td>
   <td class="td-num">0.7x </td>
 </tr><tr data-country="Deutschland" data-sector="Industrie">
-  <td><span class="chip">SIE.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3ASIE" target="_blank" rel="noopener" class="chip chip-link">SIE.DE</a></td>
   <td class="td-name">Siemens AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-industrie">Industrie</span></td>
   <td class="td-num">245.15 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 1.91%</td>
   <td class="td-num">0.6x </td>
-</tr><tr data-country="UK" data-sector="Finanzen">
-  <td><span class="chip">LLOY.L</span></td>
-  <td class="td-name">Lloyds Banking Group plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
-  <td class="td-num">103.90 <span class="td-cur">GBp</span></td>
-  <td class="td-num pos td-bold">▲ 1.86%</td>
-  <td class="td-num">0.5x </td>
-</tr><tr data-country="UK" data-sector="Finanzen">
-  <td><span class="chip">PRU.L</span></td>
-  <td class="td-name">Prudential plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
-  <td class="td-num">1134.00 <span class="td-cur">GBp</span></td>
-  <td class="td-num pos td-bold">▲ 1.80%</td>
-  <td class="td-num">0.6x </td>
 </tr><tr data-country="Deutschland" data-sector="Technologie">
-  <td><span class="chip">SAP.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3ASAP" target="_blank" rel="noopener" class="chip chip-link">SAP.DE</a></td>
   <td class="td-name">SAP SE</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-technologie">Technologie</span></td>
   <td class="td-num">173.80 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 1.79%</td>
   <td class="td-num">0.4x </td>
+</tr><tr data-country="UK" data-sector="Konsumgüter">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3AULVR" target="_blank" rel="noopener" class="chip chip-link">ULVR.L</a></td>
+  <td class="td-name">Unilever plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-konsumgueter">Konsumgüter</span></td>
+  <td class="td-num">5462.00 <span class="td-cur">GBp</span></td>
+  <td class="td-num pos td-bold">▲ 1.58%</td>
+  <td class="td-num">1.2x </td>
 </tr><tr data-country="Deutschland" data-sector="Finanzen">
-  <td><span class="chip">ALV.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AALV" target="_blank" rel="noopener" class="chip chip-link">ALV.DE</a></td>
   <td class="td-name">Allianz SE</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-finanzen">Finanzen</span></td>
   <td class="td-num">379.20 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 1.55%</td>
   <td class="td-num">0.8x </td>
+</tr><tr data-country="UK" data-sector="Energie">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3ABP" target="_blank" rel="noopener" class="chip chip-link">BP.L</a></td>
+  <td class="td-name">BP plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-energie">Energie</span></td>
+  <td class="td-num">474.10 <span class="td-cur">GBp</span></td>
+  <td class="td-num pos td-bold">▲ 1.44%</td>
+  <td class="td-num">0.7x </td>
 </tr><tr data-country="Niederlande" data-sector="Technologie">
-  <td><span class="chip">ASML.AS</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=EURONEXT%3AASML" target="_blank" rel="noopener" class="chip chip-link">ASML.AS</a></td>
   <td class="td-name">ASML Holding NV</td>
   <td><span class="flag">🇳🇱</span> <span class="td-dim">Niederlande</span></td>
   <td><span class="sector-tag s-technologie">Technologie</span></td>
   <td class="td-num">1255.59 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 1.41%</td>
   <td class="td-num">0.9x </td>
+</tr><tr data-country="UK" data-sector="Energie">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3ASHEL" target="_blank" rel="noopener" class="chip chip-link">SHEL.L</a></td>
+  <td class="td-name">Shell plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-energie">Energie</span></td>
+  <td class="td-num">2965.00 <span class="td-cur">GBp</span></td>
+  <td class="td-num pos td-bold">▲ 1.19%</td>
+  <td class="td-num">1.2x </td>
+</tr><tr data-country="UK" data-sector="Energie">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3ANG" target="_blank" rel="noopener" class="chip chip-link">NG.L</a></td>
+  <td class="td-name">National Grid plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-energie">Energie</span></td>
+  <td class="td-num">1359.50 <span class="td-cur">GBp</span></td>
+  <td class="td-num pos td-bold">▲ 1.19%</td>
+  <td class="td-num">0.6x </td>
+</tr><tr data-country="UK" data-sector="Telekommunikation">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3AVOD" target="_blank" rel="noopener" class="chip chip-link">VOD.L</a></td>
+  <td class="td-name">Vodafone Group plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-telekommunikation">Telekommunikation</span></td>
+  <td class="td-num">116.50 <span class="td-cur">GBp</span></td>
+  <td class="td-num pos td-bold">▲ 1.17%</td>
+  <td class="td-num">0.8x </td>
 </tr><tr data-country="Deutschland" data-sector="Finanzen">
-  <td><span class="chip">MUV2.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AMUV2" target="_blank" rel="noopener" class="chip chip-link">MUV2.DE</a></td>
   <td class="td-name">Munich Re AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-finanzen">Finanzen</span></td>
@@ -371,39 +404,15 @@ td { padding: 10px 14px; vertical-align: middle; }
   <td class="td-num pos td-bold">▲ 1.16%</td>
   <td class="td-num">0.5x </td>
 </tr><tr data-country="Deutschland" data-sector="Finanzen">
-  <td><span class="chip">CBK.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3ACBK" target="_blank" rel="noopener" class="chip chip-link">CBK.DE</a></td>
   <td class="td-name">Commerzbank AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-finanzen">Finanzen</span></td>
   <td class="td-num">34.49 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 1.11%</td>
   <td class="td-num">0.6x </td>
-</tr><tr data-country="UK" data-sector="Finanzen">
-  <td><span class="chip">BARC.L</span></td>
-  <td class="td-name">Barclays plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
-  <td class="td-num">473.10 <span class="td-cur">GBp</span></td>
-  <td class="td-num pos td-bold">▲ 1.10%</td>
-  <td class="td-num">0.7x </td>
-</tr><tr data-country="UK" data-sector="Konsumgüter">
-  <td><span class="chip">ULVR.L</span></td>
-  <td class="td-name">Unilever plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-konsumgueter">Konsumgüter</span></td>
-  <td class="td-num">5377.00 <span class="td-cur">GBp</span></td>
-  <td class="td-num pos td-bold">▲ 1.07%</td>
-  <td class="td-num">0.5x </td>
-</tr><tr data-country="UK" data-sector="Technologie">
-  <td><span class="chip">REL.L</span></td>
-  <td class="td-name">RELX plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-technologie">Technologie</span></td>
-  <td class="td-num">2316.00 <span class="td-cur">GBp</span></td>
-  <td class="td-num pos td-bold">▲ 1.00%</td>
-  <td class="td-num">0.6x </td>
 </tr><tr data-country="Deutschland" data-sector="Industrie">
-  <td><span class="chip">MTX.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AMTX" target="_blank" rel="noopener" class="chip chip-link">MTX.DE</a></td>
   <td class="td-name">MTU Aero Engines AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-industrie">Industrie</span></td>
@@ -411,7 +420,7 @@ td { padding: 10px 14px; vertical-align: middle; }
   <td class="td-num pos td-bold">▲ 0.85%</td>
   <td class="td-num">0.6x </td>
 </tr><tr data-country="Deutschland" data-sector="Automobil">
-  <td><span class="chip">MBG.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AMBG" target="_blank" rel="noopener" class="chip chip-link">MBG.DE</a></td>
   <td class="td-name">Mercedes-Benz Group AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-automobil">Automobil</span></td>
@@ -419,7 +428,7 @@ td { padding: 10px 14px; vertical-align: middle; }
   <td class="td-num pos td-bold">▲ 0.83%</td>
   <td class="td-num">0.8x </td>
 </tr><tr data-country="Deutschland" data-sector="Energie">
-  <td><span class="chip">RWE.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3ARWE" target="_blank" rel="noopener" class="chip chip-link">RWE.DE</a></td>
   <td class="td-name">RWE AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-energie">Energie</span></td>
@@ -427,55 +436,63 @@ td { padding: 10px 14px; vertical-align: middle; }
   <td class="td-num pos td-bold">▲ 0.74%</td>
   <td class="td-num">0.5x </td>
 </tr><tr data-country="Deutschland" data-sector="Konsumgüter">
-  <td><span class="chip">HEN3.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AHEN3" target="_blank" rel="noopener" class="chip chip-link">HEN3.DE</a></td>
   <td class="td-name">Henkel AG & Co. KGaA</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-konsumgueter">Konsumgüter</span></td>
   <td class="td-num">82.66 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 0.58%</td>
   <td class="td-num">0.4x </td>
-</tr><tr data-country="Niederlande" data-sector="Gesundheit">
-  <td><span class="chip">PHIA.AS</span></td>
-  <td class="td-name">Philips NV</td>
-  <td><span class="flag">🇳🇱</span> <span class="td-dim">Niederlande</span></td>
-  <td><span class="sector-tag s-gesundheit">Gesundheit</span></td>
-  <td class="td-num">26.40 <span class="td-cur">EUR</span></td>
-  <td class="td-num pos td-bold">▲ 0.57%</td>
-  <td class="td-num">0.9x </td>
 </tr><tr data-country="Niederlande" data-sector="Konsumgüter">
-  <td><span class="chip">HEIA.AS</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=EURONEXT%3AHEIA" target="_blank" rel="noopener" class="chip chip-link">HEIA.AS</a></td>
   <td class="td-name">Heineken NV</td>
   <td><span class="flag">🇳🇱</span> <span class="td-dim">Niederlande</span></td>
   <td><span class="sector-tag s-konsumgueter">Konsumgüter</span></td>
   <td class="td-num">77.34 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 0.57%</td>
   <td class="td-num">0.8x </td>
-</tr><tr data-country="UK" data-sector="Finanzen">
-  <td><span class="chip">HSBA.L</span></td>
-  <td class="td-name">HSBC Holdings plc</td>
+</tr><tr data-country="Niederlande" data-sector="Gesundheit">
+  <td><a href="https://www.tradingview.com/chart/?symbol=EURONEXT%3APHIA" target="_blank" rel="noopener" class="chip chip-link">PHIA.AS</a></td>
+  <td class="td-name">Philips NV</td>
+  <td><span class="flag">🇳🇱</span> <span class="td-dim">Niederlande</span></td>
+  <td><span class="sector-tag s-gesundheit">Gesundheit</span></td>
+  <td class="td-num">26.40 <span class="td-cur">EUR</span></td>
+  <td class="td-num pos td-bold">▲ 0.57%</td>
+  <td class="td-num">0.9x </td>
+</tr><tr data-country="UK" data-sector="Rohstoffe">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3ARIO" target="_blank" rel="noopener" class="chip chip-link">RIO.L</a></td>
+  <td class="td-name">Rio Tinto plc</td>
   <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
-  <td class="td-num">1288.19 <span class="td-cur">GBp</span></td>
-  <td class="td-num pos td-bold">▲ 0.51%</td>
-  <td class="td-num">0.4x </td>
+  <td><span class="sector-tag s-rohstoffe">Rohstoffe</span></td>
+  <td class="td-num">7162.00 <span class="td-cur">GBp</span></td>
+  <td class="td-num pos td-bold">▲ 0.55%</td>
+  <td class="td-num">0.7x </td>
 </tr><tr data-country="Deutschland" data-sector="Chemie">
-  <td><span class="chip">BAS.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3ABAS" target="_blank" rel="noopener" class="chip chip-link">BAS.DE</a></td>
   <td class="td-name">BASF SE</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-chemie">Chemie</span></td>
   <td class="td-num">48.89 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 0.41%</td>
   <td class="td-num">0.6x </td>
+</tr><tr data-country="UK" data-sector="Gesundheit">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3AAZN" target="_blank" rel="noopener" class="chip chip-link">AZN.L</a></td>
+  <td class="td-name">AstraZeneca plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-gesundheit">Gesundheit</span></td>
+  <td class="td-num">15344.00 <span class="td-cur">GBp</span></td>
+  <td class="td-num pos td-bold">▲ 0.41%</td>
+  <td class="td-num">1.4x </td>
 </tr><tr data-country="UK" data-sector="Finanzen">
-  <td><span class="chip">NWG.L</span></td>
-  <td class="td-name">NatWest Group plc</td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3AHSBA" target="_blank" rel="noopener" class="chip chip-link">HSBA.L</a></td>
+  <td class="td-name">HSBC Holdings plc</td>
   <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
   <td><span class="sector-tag s-finanzen">Finanzen</span></td>
-  <td class="td-num">619.00 <span class="td-cur">GBp</span></td>
-  <td class="td-num pos td-bold">▲ 0.29%</td>
-  <td class="td-num">0.4x </td>
+  <td class="td-num">1292.80 <span class="td-cur">GBp</span></td>
+  <td class="td-num pos td-bold">▲ 0.36%</td>
+  <td class="td-num">0.5x </td>
 </tr><tr data-country="Deutschland" data-sector="Telekommunikation">
-  <td><span class="chip">DTE.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3ADTE" target="_blank" rel="noopener" class="chip chip-link">DTE.DE</a></td>
   <td class="td-name">Deutsche Telekom AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-telekommunikation">Telekommunikation</span></td>
@@ -483,7 +500,7 @@ td { padding: 10px 14px; vertical-align: middle; }
   <td class="td-num pos td-bold">▲ 0.28%</td>
   <td class="td-num">0.4x </td>
 </tr><tr data-country="Deutschland" data-sector="Automobil">
-  <td><span class="chip">BMW.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3ABMW" target="_blank" rel="noopener" class="chip chip-link">BMW.DE</a></td>
   <td class="td-name">BMW AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-automobil">Automobil</span></td>
@@ -491,7 +508,7 @@ td { padding: 10px 14px; vertical-align: middle; }
   <td class="td-num pos td-bold">▲ 0.27%</td>
   <td class="td-num">0.8x </td>
 </tr><tr data-country="Deutschland" data-sector="Gesundheit">
-  <td><span class="chip">MRK.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AMRK" target="_blank" rel="noopener" class="chip chip-link">MRK.DE</a></td>
   <td class="td-name">Merck KGaA</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-gesundheit">Gesundheit</span></td>
@@ -499,87 +516,79 @@ td { padding: 10px 14px; vertical-align: middle; }
   <td class="td-num pos td-bold">▲ 0.19%</td>
   <td class="td-num">0.3x </td>
 </tr><tr data-country="Niederlande" data-sector="Konsumgüter">
-  <td><span class="chip">AD.AS</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=EURONEXT%3AAD" target="_blank" rel="noopener" class="chip chip-link">AD.AS</a></td>
   <td class="td-name">Koninklijke Ahold Delhaize</td>
   <td><span class="flag">🇳🇱</span> <span class="td-dim">Niederlande</span></td>
   <td><span class="sector-tag s-konsumgueter">Konsumgüter</span></td>
   <td class="td-num">40.05 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 0.12%</td>
   <td class="td-num">1.2x </td>
-</tr><tr data-country="UK" data-sector="Energie">
-  <td><span class="chip">NG.L</span></td>
-  <td class="td-name">National Grid plc</td>
+</tr><tr data-country="UK" data-sector="Finanzen">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3ALLOY" target="_blank" rel="noopener" class="chip chip-link">LLOY.L</a></td>
+  <td class="td-name">Lloyds Banking Group plc</td>
   <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-energie">Energie</span></td>
-  <td class="td-num">1343.50 <span class="td-cur">GBp</span></td>
-  <td class="td-num pos td-bold">▲ 0.07%</td>
-  <td class="td-num">0.8x </td>
-</tr><tr data-country="UK" data-sector="Rohstoffe">
-  <td><span class="chip">RIO.L</span></td>
-  <td class="td-name">Rio Tinto plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-rohstoffe">Rohstoffe</span></td>
-  <td class="td-num">7123.00 <span class="td-cur">GBp</span></td>
-  <td class="td-num pos td-bold">▲ 0.07%</td>
-  <td class="td-num">0.4x </td>
-</tr><tr data-country="UK" data-sector="Gesundheit">
-  <td><span class="chip">AZN.L</span></td>
-  <td class="td-name">AstraZeneca plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-gesundheit">Gesundheit</span></td>
-  <td class="td-num">15282.00 <span class="td-cur">GBp</span></td>
-  <td class="td-num neg td-bold">▼ 0.05%</td>
+  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
+  <td class="td-num">103.80 <span class="td-cur">GBp</span></td>
+  <td class="td-num neg td-bold">▼ 0.09%</td>
   <td class="td-num">0.6x </td>
 </tr><tr data-country="Deutschland" data-sector="Automobil">
-  <td><span class="chip">VOW3.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AVOW3" target="_blank" rel="noopener" class="chip chip-link">VOW3.DE</a></td>
   <td class="td-name">Volkswagen AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-automobil">Automobil</span></td>
   <td class="td-num">102.50 <span class="td-cur">EUR</span></td>
   <td class="td-num neg td-bold">▼ 0.10%</td>
   <td class="td-num">0.9x </td>
-</tr><tr data-country="UK" data-sector="Telekommunikation">
-  <td><span class="chip">VOD.L</span></td>
-  <td class="td-name">Vodafone Group plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-telekommunikation">Telekommunikation</span></td>
-  <td class="td-num">115.15 <span class="td-cur">GBp</span></td>
-  <td class="td-num neg td-bold">▼ 0.26%</td>
-  <td class="td-num">0.3x </td>
-</tr><tr data-country="UK" data-sector="Energie">
-  <td><span class="chip">SHEL.L</span></td>
-  <td class="td-name">Shell plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-energie">Energie</span></td>
-  <td class="td-num">2930.00 <span class="td-cur">GBp</span></td>
-  <td class="td-num neg td-bold">▼ 0.48%</td>
-  <td class="td-num">0.7x </td>
 </tr><tr data-country="UK" data-sector="Gesundheit">
-  <td><span class="chip">GSK.L</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3AGSK" target="_blank" rel="noopener" class="chip chip-link">GSK.L</a></td>
   <td class="td-name">GSK plc</td>
   <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
   <td><span class="sector-tag s-gesundheit">Gesundheit</span></td>
-  <td class="td-num">2213.00 <span class="td-cur">GBp</span></td>
-  <td class="td-num neg td-bold">▼ 0.58%</td>
+  <td class="td-num">2206.00 <span class="td-cur">GBp</span></td>
+  <td class="td-num neg td-bold">▼ 0.32%</td>
   <td class="td-num">0.6x </td>
+</tr><tr data-country="UK" data-sector="Finanzen">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3ANWG" target="_blank" rel="noopener" class="chip chip-link">NWG.L</a></td>
+  <td class="td-name">NatWest Group plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
+  <td class="td-num">610.40 <span class="td-cur">GBp</span></td>
+  <td class="td-num neg td-bold">▼ 1.39%</td>
+  <td class="td-num">0.7x </td>
 </tr><tr data-country="Deutschland" data-sector="Technologie">
-  <td><span class="chip">IFX.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AIFX" target="_blank" rel="noopener" class="chip chip-link">IFX.DE</a></td>
   <td class="td-name">Infineon Technologies AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-technologie">Technologie</span></td>
   <td class="td-num">45.20 <span class="td-cur">EUR</span></td>
   <td class="td-num neg td-bold">▼ 1.39%</td>
   <td class="td-num">0.5x </td>
-</tr><tr data-country="UK" data-sector="Energie">
-  <td><span class="chip">BP.L</span></td>
-  <td class="td-name">BP plc</td>
+</tr><tr data-country="UK" data-sector="Finanzen">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3APRU" target="_blank" rel="noopener" class="chip chip-link">PRU.L</a></td>
+  <td class="td-name">Prudential plc</td>
   <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-energie">Energie</span></td>
-  <td class="td-num">467.38 <span class="td-cur">GBp</span></td>
-  <td class="td-num neg td-bold">▼ 2.43%</td>
-  <td class="td-num">0.8x </td>
+  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
+  <td class="td-num">1117.50 <span class="td-cur">GBp</span></td>
+  <td class="td-num neg td-bold">▼ 1.46%</td>
+  <td class="td-num">0.7x </td>
+</tr><tr data-country="UK" data-sector="Finanzen">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3ABARC" target="_blank" rel="noopener" class="chip chip-link">BARC.L</a></td>
+  <td class="td-name">Barclays plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
+  <td class="td-num">463.00 <span class="td-cur">GBp</span></td>
+  <td class="td-num neg td-bold">▼ 2.13%</td>
+  <td class="td-num">1.2x </td>
+</tr><tr data-country="UK" data-sector="Technologie">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3AREL" target="_blank" rel="noopener" class="chip chip-link">REL.L</a></td>
+  <td class="td-name">RELX plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-technologie">Technologie</span></td>
+  <td class="td-num">2251.00 <span class="td-cur">GBp</span></td>
+  <td class="td-num neg td-bold">▼ 2.81%</td>
+  <td class="td-num">0.5x </td>
 </tr><tr data-country="Deutschland" data-sector="Gesundheit">
-  <td><span class="chip">BAYN.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3ABAYN" target="_blank" rel="noopener" class="chip chip-link">BAYN.DE</a></td>
   <td class="td-name">Bayer AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-gesundheit">Gesundheit</span></td>
@@ -608,7 +617,7 @@ td { padding: 10px 14px; vertical-align: middle; }
           <th onclick="sortT('t-gainers',6)" style="text-align:right">Vol. Ratio</th>
         </tr></thead>
         <tbody><tr data-country="Deutschland" data-sector="Konsumgüter">
-  <td><span class="chip">ADS.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AADS" target="_blank" rel="noopener" class="chip chip-link">ADS.DE</a></td>
   <td class="td-name">Adidas AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-konsumgueter">Konsumgüter</span></td>
@@ -616,7 +625,7 @@ td { padding: 10px 14px; vertical-align: middle; }
   <td class="td-num pos td-bold">▲ 2.22%</td>
   <td class="td-num">1.0x </td>
 </tr><tr data-country="Deutschland" data-sector="Finanzen">
-  <td><span class="chip">DBK.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3ADBK" target="_blank" rel="noopener" class="chip chip-link">DBK.DE</a></td>
   <td class="td-name">Deutsche Bank AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-finanzen">Finanzen</span></td>
@@ -624,55 +633,79 @@ td { padding: 10px 14px; vertical-align: middle; }
   <td class="td-num pos td-bold">▲ 2.10%</td>
   <td class="td-num">0.7x </td>
 </tr><tr data-country="Deutschland" data-sector="Industrie">
-  <td><span class="chip">SIE.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3ASIE" target="_blank" rel="noopener" class="chip chip-link">SIE.DE</a></td>
   <td class="td-name">Siemens AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-industrie">Industrie</span></td>
   <td class="td-num">245.15 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 1.91%</td>
   <td class="td-num">0.6x </td>
-</tr><tr data-country="UK" data-sector="Finanzen">
-  <td><span class="chip">LLOY.L</span></td>
-  <td class="td-name">Lloyds Banking Group plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
-  <td class="td-num">103.90 <span class="td-cur">GBp</span></td>
-  <td class="td-num pos td-bold">▲ 1.86%</td>
-  <td class="td-num">0.5x </td>
-</tr><tr data-country="UK" data-sector="Finanzen">
-  <td><span class="chip">PRU.L</span></td>
-  <td class="td-name">Prudential plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
-  <td class="td-num">1134.00 <span class="td-cur">GBp</span></td>
-  <td class="td-num pos td-bold">▲ 1.80%</td>
-  <td class="td-num">0.6x </td>
 </tr><tr data-country="Deutschland" data-sector="Technologie">
-  <td><span class="chip">SAP.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3ASAP" target="_blank" rel="noopener" class="chip chip-link">SAP.DE</a></td>
   <td class="td-name">SAP SE</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-technologie">Technologie</span></td>
   <td class="td-num">173.80 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 1.79%</td>
   <td class="td-num">0.4x </td>
+</tr><tr data-country="UK" data-sector="Konsumgüter">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3AULVR" target="_blank" rel="noopener" class="chip chip-link">ULVR.L</a></td>
+  <td class="td-name">Unilever plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-konsumgueter">Konsumgüter</span></td>
+  <td class="td-num">5462.00 <span class="td-cur">GBp</span></td>
+  <td class="td-num pos td-bold">▲ 1.58%</td>
+  <td class="td-num">1.2x </td>
 </tr><tr data-country="Deutschland" data-sector="Finanzen">
-  <td><span class="chip">ALV.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AALV" target="_blank" rel="noopener" class="chip chip-link">ALV.DE</a></td>
   <td class="td-name">Allianz SE</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-finanzen">Finanzen</span></td>
   <td class="td-num">379.20 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 1.55%</td>
   <td class="td-num">0.8x </td>
+</tr><tr data-country="UK" data-sector="Energie">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3ABP" target="_blank" rel="noopener" class="chip chip-link">BP.L</a></td>
+  <td class="td-name">BP plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-energie">Energie</span></td>
+  <td class="td-num">474.10 <span class="td-cur">GBp</span></td>
+  <td class="td-num pos td-bold">▲ 1.44%</td>
+  <td class="td-num">0.7x </td>
 </tr><tr data-country="Niederlande" data-sector="Technologie">
-  <td><span class="chip">ASML.AS</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=EURONEXT%3AASML" target="_blank" rel="noopener" class="chip chip-link">ASML.AS</a></td>
   <td class="td-name">ASML Holding NV</td>
   <td><span class="flag">🇳🇱</span> <span class="td-dim">Niederlande</span></td>
   <td><span class="sector-tag s-technologie">Technologie</span></td>
   <td class="td-num">1255.59 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 1.41%</td>
   <td class="td-num">0.9x </td>
+</tr><tr data-country="UK" data-sector="Energie">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3ASHEL" target="_blank" rel="noopener" class="chip chip-link">SHEL.L</a></td>
+  <td class="td-name">Shell plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-energie">Energie</span></td>
+  <td class="td-num">2965.00 <span class="td-cur">GBp</span></td>
+  <td class="td-num pos td-bold">▲ 1.19%</td>
+  <td class="td-num">1.2x </td>
+</tr><tr data-country="UK" data-sector="Energie">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3ANG" target="_blank" rel="noopener" class="chip chip-link">NG.L</a></td>
+  <td class="td-name">National Grid plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-energie">Energie</span></td>
+  <td class="td-num">1359.50 <span class="td-cur">GBp</span></td>
+  <td class="td-num pos td-bold">▲ 1.19%</td>
+  <td class="td-num">0.6x </td>
+</tr><tr data-country="UK" data-sector="Telekommunikation">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3AVOD" target="_blank" rel="noopener" class="chip chip-link">VOD.L</a></td>
+  <td class="td-name">Vodafone Group plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-telekommunikation">Telekommunikation</span></td>
+  <td class="td-num">116.50 <span class="td-cur">GBp</span></td>
+  <td class="td-num pos td-bold">▲ 1.17%</td>
+  <td class="td-num">0.8x </td>
 </tr><tr data-country="Deutschland" data-sector="Finanzen">
-  <td><span class="chip">MUV2.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AMUV2" target="_blank" rel="noopener" class="chip chip-link">MUV2.DE</a></td>
   <td class="td-name">Munich Re AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-finanzen">Finanzen</span></td>
@@ -680,39 +713,15 @@ td { padding: 10px 14px; vertical-align: middle; }
   <td class="td-num pos td-bold">▲ 1.16%</td>
   <td class="td-num">0.5x </td>
 </tr><tr data-country="Deutschland" data-sector="Finanzen">
-  <td><span class="chip">CBK.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3ACBK" target="_blank" rel="noopener" class="chip chip-link">CBK.DE</a></td>
   <td class="td-name">Commerzbank AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-finanzen">Finanzen</span></td>
   <td class="td-num">34.49 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 1.11%</td>
   <td class="td-num">0.6x </td>
-</tr><tr data-country="UK" data-sector="Finanzen">
-  <td><span class="chip">BARC.L</span></td>
-  <td class="td-name">Barclays plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
-  <td class="td-num">473.10 <span class="td-cur">GBp</span></td>
-  <td class="td-num pos td-bold">▲ 1.10%</td>
-  <td class="td-num">0.7x </td>
-</tr><tr data-country="UK" data-sector="Konsumgüter">
-  <td><span class="chip">ULVR.L</span></td>
-  <td class="td-name">Unilever plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-konsumgueter">Konsumgüter</span></td>
-  <td class="td-num">5377.00 <span class="td-cur">GBp</span></td>
-  <td class="td-num pos td-bold">▲ 1.07%</td>
-  <td class="td-num">0.5x </td>
-</tr><tr data-country="UK" data-sector="Technologie">
-  <td><span class="chip">REL.L</span></td>
-  <td class="td-name">RELX plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-technologie">Technologie</span></td>
-  <td class="td-num">2316.00 <span class="td-cur">GBp</span></td>
-  <td class="td-num pos td-bold">▲ 1.00%</td>
-  <td class="td-num">0.6x </td>
 </tr><tr data-country="Deutschland" data-sector="Industrie">
-  <td><span class="chip">MTX.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AMTX" target="_blank" rel="noopener" class="chip chip-link">MTX.DE</a></td>
   <td class="td-name">MTU Aero Engines AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-industrie">Industrie</span></td>
@@ -720,7 +729,7 @@ td { padding: 10px 14px; vertical-align: middle; }
   <td class="td-num pos td-bold">▲ 0.85%</td>
   <td class="td-num">0.6x </td>
 </tr><tr data-country="Deutschland" data-sector="Automobil">
-  <td><span class="chip">MBG.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AMBG" target="_blank" rel="noopener" class="chip chip-link">MBG.DE</a></td>
   <td class="td-name">Mercedes-Benz Group AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-automobil">Automobil</span></td>
@@ -728,7 +737,7 @@ td { padding: 10px 14px; vertical-align: middle; }
   <td class="td-num pos td-bold">▲ 0.83%</td>
   <td class="td-num">0.8x </td>
 </tr><tr data-country="Deutschland" data-sector="Energie">
-  <td><span class="chip">RWE.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3ARWE" target="_blank" rel="noopener" class="chip chip-link">RWE.DE</a></td>
   <td class="td-name">RWE AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-energie">Energie</span></td>
@@ -736,37 +745,37 @@ td { padding: 10px 14px; vertical-align: middle; }
   <td class="td-num pos td-bold">▲ 0.74%</td>
   <td class="td-num">0.5x </td>
 </tr><tr data-country="Deutschland" data-sector="Konsumgüter">
-  <td><span class="chip">HEN3.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AHEN3" target="_blank" rel="noopener" class="chip chip-link">HEN3.DE</a></td>
   <td class="td-name">Henkel AG & Co. KGaA</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-konsumgueter">Konsumgüter</span></td>
   <td class="td-num">82.66 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 0.58%</td>
   <td class="td-num">0.4x </td>
-</tr><tr data-country="Niederlande" data-sector="Gesundheit">
-  <td><span class="chip">PHIA.AS</span></td>
-  <td class="td-name">Philips NV</td>
-  <td><span class="flag">🇳🇱</span> <span class="td-dim">Niederlande</span></td>
-  <td><span class="sector-tag s-gesundheit">Gesundheit</span></td>
-  <td class="td-num">26.40 <span class="td-cur">EUR</span></td>
-  <td class="td-num pos td-bold">▲ 0.57%</td>
-  <td class="td-num">0.9x </td>
 </tr><tr data-country="Niederlande" data-sector="Konsumgüter">
-  <td><span class="chip">HEIA.AS</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=EURONEXT%3AHEIA" target="_blank" rel="noopener" class="chip chip-link">HEIA.AS</a></td>
   <td class="td-name">Heineken NV</td>
   <td><span class="flag">🇳🇱</span> <span class="td-dim">Niederlande</span></td>
   <td><span class="sector-tag s-konsumgueter">Konsumgüter</span></td>
   <td class="td-num">77.34 <span class="td-cur">EUR</span></td>
   <td class="td-num pos td-bold">▲ 0.57%</td>
   <td class="td-num">0.8x </td>
-</tr><tr data-country="UK" data-sector="Finanzen">
-  <td><span class="chip">HSBA.L</span></td>
-  <td class="td-name">HSBC Holdings plc</td>
+</tr><tr data-country="Niederlande" data-sector="Gesundheit">
+  <td><a href="https://www.tradingview.com/chart/?symbol=EURONEXT%3APHIA" target="_blank" rel="noopener" class="chip chip-link">PHIA.AS</a></td>
+  <td class="td-name">Philips NV</td>
+  <td><span class="flag">🇳🇱</span> <span class="td-dim">Niederlande</span></td>
+  <td><span class="sector-tag s-gesundheit">Gesundheit</span></td>
+  <td class="td-num">26.40 <span class="td-cur">EUR</span></td>
+  <td class="td-num pos td-bold">▲ 0.57%</td>
+  <td class="td-num">0.9x </td>
+</tr><tr data-country="UK" data-sector="Rohstoffe">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3ARIO" target="_blank" rel="noopener" class="chip chip-link">RIO.L</a></td>
+  <td class="td-name">Rio Tinto plc</td>
   <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
-  <td class="td-num">1288.19 <span class="td-cur">GBp</span></td>
-  <td class="td-num pos td-bold">▲ 0.51%</td>
-  <td class="td-num">0.4x </td>
+  <td><span class="sector-tag s-rohstoffe">Rohstoffe</span></td>
+  <td class="td-num">7162.00 <span class="td-cur">GBp</span></td>
+  <td class="td-num pos td-bold">▲ 0.55%</td>
+  <td class="td-num">0.7x </td>
 </tr></tbody>
       </table>
     </div>
@@ -775,7 +784,7 @@ td { padding: 10px 14px; vertical-align: middle; }
   <div id="p-losers" class="panel">
     <div class="card">
       <div class="card-hd">
-        <div class="card-title">📉 Top Loser <span class="n-badge">8</span></div>
+        <div class="card-title">📉 Top Loser <span class="n-badge">9</span></div>
         <div style="font-size:11px;color:var(--text-dim)">Stärkste Abwärtsbewegungen heute</div>
       </div>
       <table id="t-losers">
@@ -789,68 +798,76 @@ td { padding: 10px 14px; vertical-align: middle; }
           <th onclick="sortT('t-losers',6)" style="text-align:right">Vol. Ratio</th>
         </tr></thead>
         <tbody><tr data-country="Deutschland" data-sector="Gesundheit">
-  <td><span class="chip">BAYN.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3ABAYN" target="_blank" rel="noopener" class="chip chip-link">BAYN.DE</a></td>
   <td class="td-name">Bayer AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-gesundheit">Gesundheit</span></td>
   <td class="td-num">43.68 <span class="td-cur">EUR</span></td>
   <td class="td-num neg td-bold">▼ 4.16%</td>
   <td class="td-num">1.3x </td>
-</tr><tr data-country="UK" data-sector="Energie">
-  <td><span class="chip">BP.L</span></td>
-  <td class="td-name">BP plc</td>
+</tr><tr data-country="UK" data-sector="Technologie">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3AREL" target="_blank" rel="noopener" class="chip chip-link">REL.L</a></td>
+  <td class="td-name">RELX plc</td>
   <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-energie">Energie</span></td>
-  <td class="td-num">467.38 <span class="td-cur">GBp</span></td>
-  <td class="td-num neg td-bold">▼ 2.43%</td>
-  <td class="td-num">0.8x </td>
+  <td><span class="sector-tag s-technologie">Technologie</span></td>
+  <td class="td-num">2251.00 <span class="td-cur">GBp</span></td>
+  <td class="td-num neg td-bold">▼ 2.81%</td>
+  <td class="td-num">0.5x </td>
+</tr><tr data-country="UK" data-sector="Finanzen">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3ABARC" target="_blank" rel="noopener" class="chip chip-link">BARC.L</a></td>
+  <td class="td-name">Barclays plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
+  <td class="td-num">463.00 <span class="td-cur">GBp</span></td>
+  <td class="td-num neg td-bold">▼ 2.13%</td>
+  <td class="td-num">1.2x </td>
+</tr><tr data-country="UK" data-sector="Finanzen">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3APRU" target="_blank" rel="noopener" class="chip chip-link">PRU.L</a></td>
+  <td class="td-name">Prudential plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
+  <td class="td-num">1117.50 <span class="td-cur">GBp</span></td>
+  <td class="td-num neg td-bold">▼ 1.46%</td>
+  <td class="td-num">0.7x </td>
 </tr><tr data-country="Deutschland" data-sector="Technologie">
-  <td><span class="chip">IFX.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AIFX" target="_blank" rel="noopener" class="chip chip-link">IFX.DE</a></td>
   <td class="td-name">Infineon Technologies AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-technologie">Technologie</span></td>
   <td class="td-num">45.20 <span class="td-cur">EUR</span></td>
   <td class="td-num neg td-bold">▼ 1.39%</td>
   <td class="td-num">0.5x </td>
+</tr><tr data-country="UK" data-sector="Finanzen">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3ANWG" target="_blank" rel="noopener" class="chip chip-link">NWG.L</a></td>
+  <td class="td-name">NatWest Group plc</td>
+  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
+  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
+  <td class="td-num">610.40 <span class="td-cur">GBp</span></td>
+  <td class="td-num neg td-bold">▼ 1.39%</td>
+  <td class="td-num">0.7x </td>
 </tr><tr data-country="UK" data-sector="Gesundheit">
-  <td><span class="chip">GSK.L</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3AGSK" target="_blank" rel="noopener" class="chip chip-link">GSK.L</a></td>
   <td class="td-name">GSK plc</td>
   <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
   <td><span class="sector-tag s-gesundheit">Gesundheit</span></td>
-  <td class="td-num">2213.00 <span class="td-cur">GBp</span></td>
-  <td class="td-num neg td-bold">▼ 0.58%</td>
+  <td class="td-num">2206.00 <span class="td-cur">GBp</span></td>
+  <td class="td-num neg td-bold">▼ 0.32%</td>
   <td class="td-num">0.6x </td>
-</tr><tr data-country="UK" data-sector="Energie">
-  <td><span class="chip">SHEL.L</span></td>
-  <td class="td-name">Shell plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-energie">Energie</span></td>
-  <td class="td-num">2930.00 <span class="td-cur">GBp</span></td>
-  <td class="td-num neg td-bold">▼ 0.48%</td>
-  <td class="td-num">0.7x </td>
-</tr><tr data-country="UK" data-sector="Telekommunikation">
-  <td><span class="chip">VOD.L</span></td>
-  <td class="td-name">Vodafone Group plc</td>
-  <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-telekommunikation">Telekommunikation</span></td>
-  <td class="td-num">115.15 <span class="td-cur">GBp</span></td>
-  <td class="td-num neg td-bold">▼ 0.26%</td>
-  <td class="td-num">0.3x </td>
 </tr><tr data-country="Deutschland" data-sector="Automobil">
-  <td><span class="chip">VOW3.DE</span></td>
+  <td><a href="https://www.tradingview.com/chart/?symbol=XETRA%3AVOW3" target="_blank" rel="noopener" class="chip chip-link">VOW3.DE</a></td>
   <td class="td-name">Volkswagen AG</td>
   <td><span class="flag">🇩🇪</span> <span class="td-dim">Deutschland</span></td>
   <td><span class="sector-tag s-automobil">Automobil</span></td>
   <td class="td-num">102.50 <span class="td-cur">EUR</span></td>
   <td class="td-num neg td-bold">▼ 0.10%</td>
   <td class="td-num">0.9x </td>
-</tr><tr data-country="UK" data-sector="Gesundheit">
-  <td><span class="chip">AZN.L</span></td>
-  <td class="td-name">AstraZeneca plc</td>
+</tr><tr data-country="UK" data-sector="Finanzen">
+  <td><a href="https://www.tradingview.com/chart/?symbol=LSE%3ALLOY" target="_blank" rel="noopener" class="chip chip-link">LLOY.L</a></td>
+  <td class="td-name">Lloyds Banking Group plc</td>
   <td><span class="flag">🇬🇧</span> <span class="td-dim">UK</span></td>
-  <td><span class="sector-tag s-gesundheit">Gesundheit</span></td>
-  <td class="td-num">15282.00 <span class="td-cur">GBp</span></td>
-  <td class="td-num neg td-bold">▼ 0.05%</td>
+  <td><span class="sector-tag s-finanzen">Finanzen</span></td>
+  <td class="td-num">103.80 <span class="td-cur">GBp</span></td>
+  <td class="td-num neg td-bold">▼ 0.09%</td>
   <td class="td-num">0.6x </td>
 </tr></tbody>
       </table>
@@ -882,7 +899,7 @@ td { padding: 10px 14px; vertical-align: middle; }
 
 <div class="ft">
   <div>Daten: stooq.com · Kein Anlageberatungsersatz · Nur zur Information</div>
-  <div>Generiert: 23.02.2026 18:35 Uhr (UTC)</div>
+  <div>Generiert: 23.02.2026 20:58 Uhr (UTC)</div>
 </div>
 
 <script>
